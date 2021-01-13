@@ -35,6 +35,12 @@ class TicketController extends Controller
 
     }
 
+    public function showAll(){
+        
+        $tickets = Ticket::all();
+        return response()->json(['tickets'=>$tickets]);
+    }
+
     public function show(){
 
         $ticks = [];
@@ -78,7 +84,8 @@ class TicketController extends Controller
         $rules = [
             'title'=>'required|string',
             'status_id'=>'required|integer',
-            'priority_id'=>'required', 
+            'priority_id'=>'required',
+            'handler_user_id' =>'integer'
         ];
         return Validator::make($request->all(), $rules);
     }

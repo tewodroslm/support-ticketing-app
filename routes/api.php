@@ -31,5 +31,6 @@ Route::middleware('auth:api')->group(function (){
     Route::middleware(['scope:admin,basic,Ar1,Ar2'])->get('show-ticket', 'API\TicketController@show');
     Route::middleware(['scope:admin'])->post('update-ticket/{id}', 'API\TicketController@update');
     Route::middleware(['scope:admin'])->delete('delete-ticket/{id}', 'API\TicketController@destroy');
+    Route::middleware(['scope:admin'])->get('all-ticket', 'API\TicketController@showAll');
 });
 
