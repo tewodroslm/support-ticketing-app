@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Ticket;
+use App\Status;
+use App\ReturnTicket;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -51,7 +53,13 @@ class TicketController extends Controller
 
         for($i=0; $i<count($tickets); $i++){
             if($tickets[$i]->sender_email == $user->email){
-                array_push($ticks, $tickets[$i]);
+                $returnedTicket = new ReturnTicket();
+                $returnedTicket->set_title($tickets[$i]->title);
+                $returnedTicket->set_description($tickets[$i]->description);
+                $returnedTicket->set_senderemail($tickets[$i]->sender_email);
+                $status = Status::find($tickets[$i]->status_id);
+                $returnedTicket->setStatus($status->name);
+                array_push($ticks, $returnedTicket);
             }
         }
        
