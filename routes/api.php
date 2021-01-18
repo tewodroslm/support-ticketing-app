@@ -21,7 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 # Ar1 and Ar2 are roles with some admin previlages => moderator in short
 
 Route::post('login', 'API\AuthController@login');
-
+Route::post('/send-message', 'MessageController@store');
 Route::middleware('auth:api')->group(function (){
     Route::middleware(['scope:admin,Ar2,Ar1'])->get('users', 'AddAdminUsers@getUsers');
     Route::middleware(['scope:admin'])->post('add-admin', 'AddAdminUsers@addAdmin');
@@ -32,5 +32,6 @@ Route::middleware('auth:api')->group(function (){
     Route::middleware(['scope:admin'])->post('update-ticket/{id}', 'API\TicketController@update');
     Route::middleware(['scope:admin'])->delete('delete-ticket/{id}', 'API\TicketController@destroy');
     Route::middleware(['scope:admin'])->get('all-ticket', 'API\TicketController@showAll');
+    Route::middleware('auth:api')->get('/get-message', 'MessageController@fetchMessage');
 });
 
