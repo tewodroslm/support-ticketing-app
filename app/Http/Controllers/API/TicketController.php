@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
+use Illuminate\Support\Facades\DB;
 use App\Ticket;
 use App\Status;
+use App\Comment;
 use App\ReturnTicket;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class TicketController extends Controller
         
         $validator = $request->validate([
             'title' => 'required',
-            'description' => 'longText',
+            'description' => 'required',
             'sender_email' => 'required|email',
         ]);
         
@@ -50,11 +51,21 @@ class TicketController extends Controller
         $user = Auth::user();
 
         $tickets = Ticket::all();
-
+        $comments = Comment::all();
         for($i=0; $i<count($tickets); $i++){
             if($tickets[$i]->sender_email == $user->email){
                 $returnedTicket = new ReturnTicket();
+                $returnedTicket->set_id($tickets[$i]->id);
                 $returnedTicket->set_title($tickets[$i]->title);
+
+                
+                $comment = $comments->where('ticket_id', $tickets[$i]->id);
+                if(sizeof($comment) <= 0){
+                    $returnedTicket->set_comment("No comment yet!");
+                }else{
+                    $returnedTicket->set_comment($comment[0]->comment_text);
+                }
+                
                 $returnedTicket->set_description($tickets[$i]->description);
                 $returnedTicket->set_senderemail($tickets[$i]->sender_email);
                 $status = Status::find($tickets[$i]->status_id);

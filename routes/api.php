@@ -24,6 +24,7 @@ Route::post('login', 'API\AuthController@login');
 Route::post('/send-message', 'MessageController@store');
 Route::middleware('auth:api')->group(function (){
     Route::middleware(['scope:admin,Ar2,Ar1'])->get('users', 'AddAdminUsers@getUsers');
+    Route::middleware(['scope:admin,Ar2,Ar1'])->post('add-comment', 'API\CommentController@addComment');
     Route::middleware(['scope:admin'])->post('add-admin', 'AddAdminUsers@addAdmin');
     Route::middleware(['scope:admin'])->post('create-priority', 'API\PriorityController@create');
     Route::middleware(['scope:admin'])->post('create-status', 'API\StatusController@create');
