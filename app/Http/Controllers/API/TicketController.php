@@ -56,14 +56,20 @@ class TicketController extends Controller
             // if(sizeof($comment[0]) <= 0){
               //  $returnedTicket->set_comment("No comment yet!");
             //}else{
-            $returnedTicket->set_comment($comment);
+            $returnedTicket->set_comment("Comment place holder");
             //}
             $prior = Priority::find($tickets[$i]->priority_id);
             $returnedTicket->set_priority($prior->name);
             $returnedTicket->set_description($tickets[$i]->description);
             $returnedTicket->set_senderemail($tickets[$i]->sender_email);
             $user = User::find($tickets[$i]->handler_user_id);
-            $returnedTicket->set_handler_id($user->name);
+
+            if(!(array)$user){
+                $returnedTicket->set_handler_id("Handler not assigned");
+            }else{
+                $returnedTicket->set_handler_id($user->name);
+            }
+            
             $status = Status::find($tickets[$i]->status_id);
             $returnedTicket->setStatus($status->name);
             array_push($ticks, $returnedTicket);
@@ -91,11 +97,9 @@ class TicketController extends Controller
 
                 
                 $comment = $comments->where('ticket_id', $tickets[$i]->id);
-                if(sizeof($comment) <= 0){
-                    $returnedTicket->set_comment("No comment yet!");
-                }else{
-                    $returnedTicket->set_comment($comment[0]->comment_text);
-                }
+                
+                $returnedTicket->set_comment("Comment place Holder");
+                
                 
                 $returnedTicket->set_description($tickets[$i]->description);
                 $returnedTicket->set_senderemail($tickets[$i]->sender_email);
