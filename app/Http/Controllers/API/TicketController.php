@@ -84,7 +84,7 @@ class TicketController extends Controller
     public function show(){
 
         $ticks = [];
-        
+        $ticksWithhandlerid = [];
         $user = Auth::user();
 
         $tickets = Ticket::all();
@@ -106,11 +106,12 @@ class TicketController extends Controller
                 $status = Status::find($tickets[$i]->status_id);
                 $returnedTicket->setStatus($status->name);
                 array_push($ticks, $returnedTicket);
+                array_push($ticksWithhandlerid, $tickets[$i]);
             }
         }
        
         if(count($ticks)>0){
-            return response()->json(["count" => count($ticks), "tickets" => $ticks]);
+            return response()->json(["count" => count($ticks), "tickets" => $ticks, "twith"=>$ticksWithhandlerid]);
         }else{
             return response()->json(["message" => "Whoops! no ticket found"]);
         }
@@ -123,6 +124,7 @@ class TicketController extends Controller
         $user = Auth::user();
         $ticks = [];
         $comments = Comment::all();
+        
         for($i=0; $i<count($tickets); $i++){
             if($tickets[$i]->handler_user_id == $user->id){
                 $returnedTicket = new ReturnAdminTickets();
@@ -139,8 +141,14 @@ class TicketController extends Controller
                 $returnedTicket->set_priority($prior->name);
                 $returnedTicket->set_description($tickets[$i]->description);
                 $returnedTicket->set_senderemail($tickets[$i]->sender_email);
+                
                 $user = User::find($tickets[$i]->handler_user_id);
                 $returnedTicket->set_handler_id($user->name);
+
+                $auther = DB::table('users')->where('email',  $tickets[$i]->sender_email)->first();
+        
+                $returnedTicket->set_sender_id($auther->id);
+
                 $status = Status::find($tickets[$i]->status_id);
                 $returnedTicket->setStatus($status->name);
                 array_push($ticks, $returnedTicket);

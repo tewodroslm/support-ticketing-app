@@ -8,6 +8,7 @@ class ReturnAdminTickets
 	public $title;
 	public $description;
 	public $sender_email;
+	public $sender_id;
 	public $status;
 	public $priority;
   public $id;
@@ -34,7 +35,10 @@ class ReturnAdminTickets
 	}
 	function set_senderemail($sender_email) {
     $this->sender_email = $sender_email;
-  }
+	}
+	function set_sender_id($sender_id){
+		$this->sender_id = $sender_id;
+	}
 	function setStatus($status) {
     $this->status = $status;
   }
