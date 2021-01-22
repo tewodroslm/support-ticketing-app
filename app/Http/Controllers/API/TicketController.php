@@ -113,6 +113,37 @@ class TicketController extends Controller
 
     }
     
+    // Show ticket to moderator
+    public function showMTicket(){
+        $tickets = Ticket::all();
+        $user = Auth::user();
+        $ticks = [];
+        $comments = Comment::all();
+        for($i=0; $i<count($tickets); $i++){
+            if($tickets[$i]->handler_user_id == $user->id){
+                $returnedTicket = new ReturnAdminTickets();
+                $returnedTicket->set_id($tickets[$i]->id);
+                $returnedTicket->set_title($tickets[$i]->title);
+
+                $comment = $comments->where('ticket_id', $tickets[$i]->id);
+                // if(sizeof($comment[0]) <= 0){
+                  //  $returnedTicket->set_comment("No comment yet!");
+                //}else{
+                $returnedTicket->set_comment($comment);
+                //}
+                $prior = Priority::find($tickets[$i]->priority_id);
+                $returnedTicket->set_priority($prior->name);
+                $returnedTicket->set_description($tickets[$i]->description);
+                $returnedTicket->set_senderemail($tickets[$i]->sender_email);
+                $user = User::find($tickets[$i]->handler_user_id);
+                $returnedTicket->set_handler_id($user->name);
+                $status = Status::find($tickets[$i]->status_id);
+                $returnedTicket->setStatus($status->name);
+                array_push($ticks, $returnedTicket);
+            }
+        }
+        return response()->json(["count" => count($ticks), "tickets" => $ticks]);
+    }
 
     public function update(Request $request, $id){
         
