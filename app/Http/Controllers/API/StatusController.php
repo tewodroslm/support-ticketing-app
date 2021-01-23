@@ -23,4 +23,11 @@ class StatusController extends Controller
 
     }
 
+    public function getStatus(){
+
+        $statuses = Status::all();
+
+        return response()->json(["statuses" => $statuses]);
+
+    }
 }

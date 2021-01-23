@@ -23,4 +23,12 @@ class PriorityController extends Controller
         }
     }
 
+    public function getPriority(){
+
+        $priority = Priority::all();
+
+        return response()->json(["priority" => $priority]);
+
+    }
+
 }

@@ -14,13 +14,13 @@ class AddAdminUsers extends Controller
     // List Users
     public function getUsers(){ 
         $toUser = [];
-        $listofUsers = User::get();
+        $listofUsers = User::with('roles')->get();
         foreach($listofUsers as $user){
-            $userRole = $user->roles()->first();
+            // $userRole = $user->roles()->first();
             $indUser = $user; 
-            array_push($toUser,$indUser,$userRole);
+            array_push($toUser,$indUser);
         }
-        return response()->json(['list of user'=>$toUser]);
+        return response()->json(['list_of_user'=>$toUser]);
     }
 
     public function addAdmin(Request $request){

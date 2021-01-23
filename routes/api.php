@@ -28,6 +28,8 @@ Route::middleware('auth:api')->group(function (){
     Route::middleware(['scope:admin'])->post('add-admin', 'AddAdminUsers@addAdmin');
     Route::middleware(['scope:admin'])->post('create-priority', 'API\PriorityController@create');
     Route::middleware(['scope:admin'])->post('create-status', 'API\StatusController@create');
+    Route::middleware(['scope:admin'])->get('status', 'API\StatusController@getStatus');
+    Route::middleware(['scope:admin'])->get('priority', 'API\PriorityController@getPriority');
     Route::middleware(['scope:admin,basic,Ar1,Ar2'])->post('create-ticket', 'API\TicketController@create');
     Route::middleware(['scope:basic'])->get('show-ticket', 'API\TicketController@show');
     Route::middleware(['scope:admin'])->post('update-ticket/{id}', 'API\TicketController@update');
