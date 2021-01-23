@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 use Illuminate\Support\Facades\DB;
 use App\Ticket;
+use App\TicketNotification;
 use App\Status;
 use App\Priority;
 use App\Comment;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use App\Events\TicketNotificationCreated;
 
 class TicketController extends Controller
 {
@@ -32,6 +34,12 @@ class TicketController extends Controller
         ]);
 
         $ticket = Ticket::create($request->all());
+        $notfic = TicketNotification::create([
+            'title' => $ticket->title,
+            'ticket_id' => $ticket->id
+        ]);
+
+        broadcast(new TicketNotificationCreated($notfic));
 
         if(!is_null($ticket)){
             return response()->json(['success' => true, 'message' => 'Ticket Created']);
