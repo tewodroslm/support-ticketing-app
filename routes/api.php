@@ -23,6 +23,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', 'API\AuthController@login');
 Route::post('/send-message', 'MessageController@store');
 Route::middleware('auth:api')->group(function (){
+    Route::get("/logout", "API\AuthController@logout");
     Route::middleware(['scope:admin,Ar2,Ar1'])->get('users', 'AddAdminUsers@getUsers');
     Route::middleware(['scope:admin,Ar2,Ar1'])->post('add-comment', 'API\CommentController@addComment');
     Route::middleware(['scope:admin,Ar2,Ar1,basic'])->get('comment/{id}', 'API\CommentController@getComment');

@@ -20,8 +20,22 @@ class CommentController extends Controller
             'user_id' => 'required',
         ]);
         $comment = Comment::create($request->all());
+
+        // Broadcast when ever a comment is added to ticket by the moderator
+        $user = auth()->user();
+        $userRole = $user->roles()->first();
+
+        if($userRole->role == "Ar1" || $userRole->role == "Ar2"){
+            $notfic = TicketNotification::create([
+                'title' => $comment->comment_text,
+                'ticket_id' => $comment->ticket_id
+            ]);
+    
+            broadcast(new TicketNotificationCreated($notfic));
+        }
+
         if(!is_null($comment)){
-            return response()->json(['success' => true, 'comment' => 'Comment Created']);
+            return response()->json(['success' => true, 'comment' => 'Comment Created', "Role"=> $userRole->role ]);
         }
     }
 
